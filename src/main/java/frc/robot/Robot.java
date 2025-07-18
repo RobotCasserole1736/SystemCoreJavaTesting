@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.WriteReadDelayTest.WriteReadDelayTest;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -29,12 +30,13 @@ public class Robot extends TimedRobot {
   }
 
   int counter = 0;
-  RealSRXEncoder enc = new RealSRXEncoder(0);
+  //RealSRXEncoder enc = new RealSRXEncoder(0);
   //CANBusStressTest cbst = new CANBusStressTest();
   double prevLoopStartTime = Timer.getFPGATimestamp();
   OnboardIMU imu = new OnboardIMU(OnboardIMU.MountOrientation.kFlat);
-  PWMSparkMax spark = new PWMSparkMax(5);
+  //PWMSparkMax spark = new PWMSparkMax(5);
   //LoggedCamera cam = new LoggedCamera();
+  WriteReadDelayTest wrdt = new WriteReadDelayTest();
 
   @Override
   public void teleopPeriodic() {
@@ -43,11 +45,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+  }
 
   @Override
   public void autonomousPeriodic() {
-    spark.set(-1.0);
+    wrdt.doTest();
   }
 
   @Override
@@ -63,11 +66,11 @@ public class Robot extends TimedRobot {
 
     //System.out.println("Hello world");
     //SmartDashboard.putNumber("TestCounter", counter++);
-    enc.getRawAngle_rad();
+    //enc.getRawAngle_rad();
     SmartDashboard.putNumber("IMU Yaw (rad)", imu.getYawRadians());
     //cbst.update();
 
-    spark.set(1.0);
+    //spark.set(1.0);
 
     double loopEndTime = Timer.getFPGATimestamp();
 
