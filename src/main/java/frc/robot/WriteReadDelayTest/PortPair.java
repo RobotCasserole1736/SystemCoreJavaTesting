@@ -2,7 +2,6 @@ package frc.robot.WriteReadDelayTest;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PortPair {
@@ -12,18 +11,31 @@ public class PortPair {
     public PortPair(int inputPortNumber, int outputPortNumber) {
         this.inputPort = new DigitalInput(inputPortNumber);
         this.outputPort = new DigitalOutput(outputPortNumber);
+        this.outputPort.set(false);
     }
 
     public double testDelay(){
+
+        //Prep - make sure we're stable in the "off" state:
         this.outputPort.set(false);
-        var startTime_us = Timer.getFPGATimestamp() * 1000000;
+        while (this.inputPort.get()) {
+            // Wait for the input to register being off
+        }
+
+        // Timed portion - check time from write to read
+        var startTime_ns = System.nanoTime();
         this.outputPort.set(true);
         while (!this.inputPort.get()) {
             // Wait for the input to register the change
         }
-        var endTime_us = Timer.getFPGATimestamp()* 1000000;
+        var endTime_ns = System.nanoTime();
+
+        // Reset port value
         this.outputPort.set(false);
-        var delay_us =  (endTime_us - startTime_us);
+
+        // Calculate and report results
+        var delay_ns = endTime_ns - startTime_ns;
+        var delay_us =  (delay_ns) / 1000.0;
         SmartDashboard.putNumber(getName(), delay_us);
         return delay_us;
     }
